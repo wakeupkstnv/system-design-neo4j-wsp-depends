@@ -119,7 +119,6 @@ From Robert C. Martin's *Clean Architecture*:
 | Redis Cluster | 1 | 0 | 0.000 | Maximally stable (leaf node) |
 | S3 Cluster | 2 | 0 | 0.000 | Maximally stable (leaf node) |
 
-Full table: see [`docs/stability_metrics.md`](docs/stability_metrics.md)
 
 ## Project Structure
 
@@ -127,13 +126,11 @@ Full table: see [`docs/stability_metrics.md`](docs/stability_metrics.md)
 .
 ├── docker-compose.yml              # Neo4j container setup
 ├── README.md                       # This file
-├── docs/
-│   └── stability_metrics.md        # Full metrics table (generated)
 └── scripts/
     ├── migration.cypher            # Creates nodes & relationships in Neo4j
     ├── stability_metrics.cypher    # Cypher query for stability metrics
-    ├── migrate.sh                  # One-command setup script
-    └── compute_metrics.py          # Python script (standalone, no Neo4j needed)
+    ├── init.sh            
+    └── compute_metrics.py        
 ```
 
 ## Cypher Queries Reference
