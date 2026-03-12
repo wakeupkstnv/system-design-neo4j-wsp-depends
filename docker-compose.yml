@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  neo4j:
+    image: neo4j:5.26-community
+    container_name: gsp-neo4j
+    ports:
+      - "7474:7474"   # Neo4j Browser (HTTP)
+      - "7687:7687"   # Bolt protocol
+    environment:
+      - NEO4J_AUTH=neo4j/studentportal123
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "studentportal123", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  neo4j-init:
+    image: neo4j:5.26-community
+    container_name: gsp-neo4j-init
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./scripts:/scripts:ro
+    environment:
+      - NEO4J_USER=neo4j
+      - NEO4J_PASS=studentportal123
+      - NEO4J_HOST=neo4j
+      - NEO4J_BOLT_PORT=7687
+    entrypoint: ["/bin/bash", "/scripts/init.sh"]
+    restart: "no"
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
